@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "stop-other-launches",
+            "type": "shell",
+            "command": "kill-port 9000", // Replace with the appropriate command to stop your server
+            "problemMatcher": []
+        }
+    ]
+}

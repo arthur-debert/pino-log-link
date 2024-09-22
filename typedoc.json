@@ -1,0 +1,9 @@
+{
+    "entryPoints": ["src/bigimg/**.*"],
+    "out": "docs",
+    "exclude": ["**/*+(index|module|modules).ts"], // Exclude module files
+    "excludeExternals": true, // Exclude external modules
+    "excludePrivate": false, // Exclude private members
+    "excludeProtected": false, // Exclude protected members
+    "excludeNotDocumented": false // Exclude not documented members
+}
