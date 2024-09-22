@@ -1,54 +1,6 @@
+import LogLinkSerializer from "./LogLinkSerializer";
+import { LogMessage, PinoConfig, PinoConfigPost, SerializerConf } from "./types";
 
-export interface LogMessage {
-    msg: string;
-    time: number;
-    module?: string;
-    tag?: string[];
-}
-
-
-export interface Serializer {
-    field: (value: any) => any;
-    record?: (record: LogMessage) => LogMessage;
-};
-
-export type SerializerConf = {
-    [key: string]: Serializer;
-};
-
-interface PinoBrowserConfig {
-    asObject?: boolean;
-    serialize?: string[];
-    write?: (writeFunc: Function, postProcessors: Function[]) => (record: LogMessage) => LogMessage;
-}
-
-export interface PinoConfig {
-    browser?: PinoBrowserConfig & {
-        [key: string]: any; // Allow any other properties within 'browser'
-    };
-    serializers?: {
-        [key: string]: any;
-    };
-}
-
-
-const SourceFileLinkSerializer: Serializer = {
-    record: (record: LogMessage): LogMessage => {
-        const msg: string = record.module ? record.msg + ` ${record.module}` : record.msg;
-        console.log(msg)
-        delete record.module;
-        return record
-    },
-    field: (value: any) => {
-        // MODULE_MAP has to be injected in the build process
-        // currently it's a webpack define plugin
-        const MODULE_MAP = process.env.MODULE_MAP;
-        if (MODULE_MAP && MODULE_MAP[value]) {
-            value = MODULE_MAP[value];
-        }
-        return `${value}`;
-    }
-};
 /*
  * This will add all the serializers reqeuested to the pino instance.
  * Some serializer may have a post processor  a function that needs to receive
@@ -72,7 +24,7 @@ const SourceFileLinkSerializer: Serializer = {
  * @return the updated pino configuration object
  /*
  */
-function addSerializers(config: PinoConfig, serializers: SerializerConf) {
+export function addSerializers(config: PinoConfig, serializers: SerializerConf): PinoConfigPost {
     // first we need to add the serializers to the logger
     // create the browser object if it doesn't exist
     if (!config.browser) {
@@ -86,10 +38,10 @@ function addSerializers(config: PinoConfig, serializers: SerializerConf) {
 
     // If config.serializers doesn't exist, initialize it as an empty object
     config.serializers = config.serializers || {};
-    config.serializers = { ...config.serializers, ...Object.fromEntries(Object.entries(serializers).map(([key, value]) => [key, value.field])) };
+    config.serializers = { ...config.serializers, ...Object.fromEntries(Object.entries(serializers).map(([key, value]) => [key, value.fieldFunc])) };
 
     let previous: Function | null = config.browser.write || console.log
-    let recordProcessors = Object.values(serializers).map(serializer => serializer.record).filter(record => record !== undefined);
+    let recordProcessors = Object.values(serializers).map(serializer => serializer.recordFunc).filter(record => record !== undefined);
     function chainedProcessors(writeFunc: Function, postProcessors: Function[]) {
         return function (record: LogMessage) {
             const result = postProcessors.reduce((acc, postProcessor) => postProcessor(acc, writeFunc), record);
@@ -98,10 +50,10 @@ function addSerializers(config: PinoConfig, serializers: SerializerConf) {
         };
     }
     config.browser.write = chainedProcessors(previous, recordProcessors) as (record: any) => any;
-    return config;
+    return config as PinoConfigPost;
 }
 
 
 export default function addLogLink(config: any, propName: string = 'module') {
-    addSerializers(config, { propName: SourceFileLinkSerializer });
+    addSerializers(config, { propName: LogLinkSerializer });
 }

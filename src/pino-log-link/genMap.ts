@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs';
 /**
  * Loops through the src code root (projectRoot/src and generates a map where
  * the key is the module name and the value is the path to the module
@@ -5,10 +7,10 @@
  * For example:
  * "FrameBuffer"; "bigimg/renderer/FrameBuffer.ts"
  */
-function genMap(fs, path, srcDir, prefix) {
-    let map = {};
+function genMap(srcDir: string, prefix: string): Record<string, string> {
+    const map: Record<string, string> = {};
 
-    function processDirectory(dir) {
+    function processDirectory(dir: string): void {
         fs.readdirSync(dir).forEach((file) => {
             const filePath = path.join(dir, file);
             const stat = fs.statSync(filePath);
@@ -37,4 +39,4 @@ function genMap(fs, path, srcDir, prefix) {
     return map;
 }
 
-module.exports = genMap;
+export default genMap;
