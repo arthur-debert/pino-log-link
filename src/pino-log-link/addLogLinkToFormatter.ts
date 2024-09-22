@@ -16,11 +16,3 @@ export function addLogLinkToFormatter(formatFunctionContainer: any, formatterNam
     return pluckAndChain(formatFunctionContainer.formatters, formatterName, tagAppender);
 }
 
-function addLogLink(pinoConfig: any, moduleNameProp: string, moduleMapper: Function, baseURL: string, appendToProp: string = "msg"): any {
-    let formatter = pinoConfig.formatters || {};
-    formatter = addLogLinkToFormatter(formatter, 'log', moduleNameProp, moduleMapper, baseURL, appendToProp);
-    pinoConfig.formatters = formatter;
-    return pinoConfig;
-}
-export default addLogLink;
-

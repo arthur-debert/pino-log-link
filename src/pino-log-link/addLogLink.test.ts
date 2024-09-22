@@ -1,4 +1,5 @@
-import addLogLink, { addLogLinkToFormatter } from './addLogLink';
+import { addLogLinkToFormatter } from "./addLogLinkToFormatter";
+import setupLogLink from "./setupLogLink";
 
 describe('addLogLinkToFormatter', () => {
     it('should add a log link to the log message', () => {
@@ -82,7 +83,7 @@ describe('addLogLink', () => {
         };
 
         // Call addLogLink to modify the formatters object
-        config = addLogLink(config, 'moduleName', () => moduleMap, 'http://localhost:3000/');
+        config = setupLogLink(config, 'moduleName', () => moduleMap, 'http://localhost:3000/');
 
         const logRecord = { moduleName: 'moduleA', msg: 'hello' };
 
