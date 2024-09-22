@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+
 import * as path from 'path';
 
 /**
@@ -9,11 +9,14 @@ import * as path from 'path';
  * If more than one file has the same module name (say packageA.index.ts and packageB.indexTs),
  * find the smallest path that removes ambguitity, and store that path part as the key to the map
  */
-function generateModuleMap(rootDirectory: string, includeExtensions: string[]): Record<string, string> {
+function generateModuleMap(rootDirectory: string, includeExtensions: string[], fs: any): Record<string, string> {
     const moduleMap: Record<string, string> = {};
     const moduleNameToFilePath: Record<string, string[]> = {};
 
     function traverseDirectory(directory: string) {
+        if (!fs) {
+            fs = require('fs');
+        }
         const files = fs.readdirSync(directory);
 
         for (const file of files) {
