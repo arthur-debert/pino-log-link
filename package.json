@@ -1,12 +1,14 @@
 {
   "name": "pino-log-link",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack serve --mode development ",
+    "start": "webpack serve --mode development",
     "docs": "typedoc",
-    "test": "jest"
+    "test": "jest",
+    "start:node": "tsc && node dist/index.mjs"
   },
   "keywords": [],
   "author": "",

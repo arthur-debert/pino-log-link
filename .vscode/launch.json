@@ -4,19 +4,15 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "npm start",
+            "name": "npm start:node",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "start"],
+            "runtimeArgs": ["run", "start:node"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "skipFiles": ["<node_internals>/**"],
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "http://localhost:9000",
-                "uriFormat": "http://localhost:9000"
-            },
             "restart": true,
-            "preLaunchTask": "stop-other-launches"
+            "outputCapture": "std",
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }

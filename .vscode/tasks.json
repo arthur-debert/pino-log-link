@@ -6,6 +6,11 @@
             "type": "shell",
             "command": "kill-port 9000", // Replace with the appropriate command to stop your server
             "problemMatcher": []
+        },
+        {
+            "label": "Kill Previous Instances",
+            "type": "shell",
+            "command": "pkill -f 'node dist/index.js'" // Adjust the command
         }
     ]
 }
