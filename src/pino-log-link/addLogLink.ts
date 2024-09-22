@@ -2,25 +2,25 @@ import mapPropToUrl from "./mapPropToUrl";
 import pluckAndChain from "./pluckAndChain";
 /**
  /**
-  * With a given pino configuration object, setup a log link.
-  * This function will use the pinoConfig["formatters"]["log"](logRecord : any)
-  * function. It will remove the moduleName from logRecord[moduleNameProp] , use
-  * fromModuleToFileUrl and append it to the logRecord[appendToProp] property.
-  * It can generate the moduleMap from a moduleMapper function.
-  *
-  * Remember that , if one is present, the pinoConfig["formatters"]["log"] function
-  * should be called after we're done. For this we will use pluckAndChain.
-  * The final function should return the modified logRecord..
+  * Transforms pinoConfig to include a formatter that gets the module name from
+  * the log record and appends it to the log message as a link.
+  * This is an internal function, end users should use the addLogLink function.
   */
-function addLogLink(pinoConfig: any, formatterName: string, moduleNameProp: string, moduleMapper: Function,
+export function addLogLinkToFormatter(formatFunctionContainer: any, formatterName: string, moduleNameProp: string, moduleMapper: Function,
     baseURL: string, appendToProp: string): any {
     const moduleMap = moduleMapper();
     const tagAppender = (logRecord: any) => {
         return mapPropToUrl(logRecord, moduleNameProp, baseURL, moduleMap, appendToProp);
     };
-    pinoConfig.formatters = pinoConfig.formatters || {};
-    return pluckAndChain(pinoConfig.formatters, formatterName, tagAppender);
+    formatFunctionContainer.formatters = formatFunctionContainer.formatters || {};
+    return pluckAndChain(formatFunctionContainer.formatters, formatterName, tagAppender);
 }
 
-
+function addLogLink(pinoConfig: any, moduleNameProp: string, moduleMapper: Function, baseURL: string, appendToProp: string = "msg"): any {
+    let formatter = pinoConfig.formatters || {};
+    formatter = addLogLinkToFormatter(formatter, 'log', moduleNameProp, moduleMapper, baseURL, appendToProp);
+    pinoConfig.formatters = formatter;
+    return pinoConfig;
+}
 export default addLogLink;
+

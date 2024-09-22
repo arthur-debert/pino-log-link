@@ -1,6 +1,6 @@
-import addLogLink from './addLogLink';
+import addLogLink, { addLogLinkToFormatter } from './addLogLink';
 
-describe('addLogLink', () => {
+describe('addLogLinkToFormatter', () => {
     it('should add a log link to the log message', () => {
         const moduleMap = {
             'moduleA': '/project/src/moduleA.ts',
@@ -12,7 +12,7 @@ describe('addLogLink', () => {
         };
 
         // Call addLogLink to modify the formatters object
-        const modifiedFormatters = addLogLink(formatters, "log", 'moduleName', () => moduleMap, 'http://localhost:3000/', 'message');
+        const modifiedFormatters = addLogLinkToFormatter(formatters, "log", 'moduleName', () => moduleMap, 'http://localhost:3000/', 'message');
 
         const logRecord = { moduleName: 'moduleA', message: 'hello' };
 
@@ -21,6 +21,33 @@ describe('addLogLink', () => {
 
         expect(result).toEqual({
             message: 'hello http://localhost:3000/project/src/moduleA.ts'
+        });
+    });
+});
+
+describe('addLogLink', () => {
+    it('should add a log link to the log message', () => {
+        const moduleMap = {
+            'moduleA': '/project/src/moduleA.ts',
+        };
+        let config = {
+            formatters: {
+                log: function (logRecord: any) {
+                    return logRecord;
+                },
+            }
+        };
+
+        // Call addLogLink to modify the formatters object
+        config = addLogLink(config, 'moduleName', () => moduleMap, 'http://localhost:3000/');
+
+        const logRecord = { moduleName: 'moduleA', msg: 'hello' };
+
+        // Directly call the modified formatter function
+        const result = config.formatters.log(logRecord);
+
+        expect(result).toEqual({
+            msg: 'hello http://localhost:3000/project/src/moduleA.ts'
         });
     });
 });
