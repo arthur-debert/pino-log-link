@@ -1,5 +1,6 @@
-
 import * as path from 'path';
+
+const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'];
 
 /**
  * Given a root directory, generate a map of all the modules in the directory.
@@ -9,7 +10,7 @@ import * as path from 'path';
  * If more than one file has the same module name (say packageA.index.ts and packageB.indexTs),
  * find the smallest path that removes ambguitity, and store that path part as the key to the map
  */
-function generateModuleMap(rootDirectory: string, includeExtensions: string[], fs: any): Record<string, string> {
+function generateModuleMap(rootDirectory: string, includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS, fs?: any): Record<string, string> {
     const moduleMap: Record<string, string> = {};
     const moduleNameToFilePath: Record<string, string[]> = {};
 
