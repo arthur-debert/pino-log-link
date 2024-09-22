@@ -1,6 +1,6 @@
 
 
-export default function removeAndTransform(object: any, prop: string, transformer: (o: any) => any): any {
+export default function removePropAndTransform(object: any, prop: string, transformer: (o: any) => any): any {
     object = object || {};
     const plucked = object[prop];
     delete object[prop];
