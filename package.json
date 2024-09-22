@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "@types/node": "^22.5.5",
-    "pino": "^9.4.0"
+    "path": "^0.12.7",
   }
 }
