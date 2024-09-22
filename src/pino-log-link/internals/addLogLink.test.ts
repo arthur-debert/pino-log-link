@@ -1,5 +1,5 @@
 import { addLogLinkToFormatter } from "./addLogLinkToFormatter";
-import setupLogLink from "./setupLogLink";
+import setupLogLink from "../../setupLogLink";
 
 describe('addLogLinkToFormatter', () => {
     it('should add a log link to the log message', () => {
