@@ -5,9 +5,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "webpack serve --mode development",
     "docs": "typedoc",
-    "test": "jest",
+    "test": "jest src",
     "start:node": "tsc && node dist/index.mjs"
   },
   "keywords": [],
