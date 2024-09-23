@@ -41,10 +41,22 @@ function generateModuleMap(rootDirectory: string, includeExtensions: string[] = 
             moduleMap[moduleName] = filePaths[0];
         } else {
             const commonPrefix = findLongestCommonPrefix(filePaths);
-            const moduleKey = filePaths[0].substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
+            // Prioritize .ts files when resolving conflicts
+            let moduleKey = '';
+            for (const filePath of filePaths) {
+                if (filePath.endsWith('.ts')) {
+                    moduleKey = filePath.substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
+                    break; // Prioritize the first .ts file found
+                }
+            }
+            // If no .ts file is found, use the original logic
+            if (moduleKey === '') {
+                moduleKey = filePaths[0].substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
+            }
             moduleMap[moduleKey] = filePaths[0];
         }
     }
+
 
     return moduleMap;
 }
