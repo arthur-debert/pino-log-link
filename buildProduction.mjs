@@ -33,7 +33,7 @@ async function main() {
     }
 
     // Run tests
-    if (exec("npm run tests").code !== 0) {
+    if (exec("npm run test").code !== 0) {
         console.error("Tests failed");
         process.exit(1);
     }
@@ -53,8 +53,14 @@ async function main() {
     exec(`git tag v${newVersion}`);
     exec("git push --tags");
 
+    // Publish to npm
+    if (exec("npm publish").code !== 0) {
+        console.error("npm publish failed");
+        process.exit(1);
+    }
+
     console.log(
-        `Build and release version ${newVersion} completed successfully.`
+        `Build, release, and publish version ${newVersion} completed successfully.`
     );
 }
 
