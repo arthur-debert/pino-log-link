@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        "   \"**/.VSCodeCounter": true
+    },
+    "files.watcherExclude": {
+        "   \"**/.VSCodeCounter": true
+    },
+    "search.exclude": {
+        "   \"**/.VSCodeCounter": true
+    }
+}
