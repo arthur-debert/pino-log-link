@@ -1,5 +1,6 @@
 import * as path from 'path';
 import fs from 'fs';
+import ModuleMap from '../types';
 
 
 const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'];
@@ -14,8 +15,8 @@ const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'
  */
 function generateMapFromFS(rootDirectory: string,
     includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS,
-    fsProvider: any = fs): Record<string, string> {
-    const moduleMap: Record<string, string> = {};
+    fsProvider: any = fs): ModuleMap {
+    const moduleMap: ModuleMap = {};
     const moduleNameToFilePath: Record<string, string[]> = {};
 
     function traverseDirectory(directory: string) {

@@ -1,4 +1,6 @@
-function sourceMapResolve(moduleName: string, pathMap: Record<string, string>): string {
+import ModuleMap from "./types";
+
+function sourceMapResolve(moduleName: string, pathMap: ModuleMap): string {
     const unkown = 'not found!'
     return pathMap[moduleName] || unkown;
 }

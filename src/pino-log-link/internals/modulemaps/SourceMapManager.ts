@@ -27,75 +27,79 @@ const manager = new SourceMapManager(new FileSystemGenerator(), new EnvVarBacken
 })();
  */
 // and the main logic for generating . storing and fecthing
-import ModuleMap, { SourceMapGenerator, StorageBackend, StorageOptions } from './types';
+import ModuleMap, { StorageOptions } from './types';
+import { AbstractSourceMapGenerator } from "./AbstractSourceMapGenerator";
+import { AbstractStorageBackend } from "./backends/AbstractStorageBackend";
 import HTTPBackend from './backends/HTTPBackend';
 import EnvVarBackend from './backends/EnvVarBackend';
 import FileSystemGenerator from './generators/FileSystemMapGenerator';
-import SourceMapMapGenerator from './generators/SourceMapGenerator';
+import SourceMapMapGenerator from './generators/AbstractSourceMapGenerator';
 import { SourceMapGenError, SourceMapBackendReadError, SourceMapBackendStoreError, InvalidModuleMapError, InvalidModuleMapSerializationError, HttpError, NetworkError } from './errors';
 
 
-// Define specific types for type safety
-type SourceMapGeneratorConstructor = new () => SourceMapGenerator;
-type SourceMapBackendConstructor = new () => StorageBackend;
+type ManagerStatus = 'empty' | 'generated' | 'ready';
 
 /**
  * SourceMapManager manages the generation and storage of source maps.
+ *
+ * It is a configurable , high-level class that combines a generator and a storage
+ * backend to create and store source maps.
+ * Both should be provided configured with their respective options, from them on
+ * the manager will handle the generation and storage of the source maps.
+ *
+ * Both are async operations, so the manager is async as well.
+ * Once the managers is fully inited, it can be used to resolve module names to file paths synchronously.
+ * @param generator A class that extends `AbstrctSourceMapGenerator` and is used to generate source maps.
+ * @param store A class that extends `AbstractStorageBackend` and is used to store the generated source maps.
  * @example
  * const manager = new SourceMapManager(FileSystemGenerator, EnvVarBackend);
  * const map =  await manager.generateAndStoreSourceMap('/path/to/root/dir', { envVarName: 'MODULE_MAP' }).then().read()
  */
 class SourceMapManager {
-    private generator: SourceMapGenerator;
-    private store: StorageBackend;
+    private generator: AbstractSourceMapGenerator;
+    private store: AbstractStorageBackend;
 
     map: ModuleMap | undefined;
-    constructor(
-        Generator: SourceMapGeneratorConstructor,
-        Store: SourceMapBackendConstructor
+    status: ManagerStatus = 'empty'
+
+    constructor(generator: AbstractSourceMapGenerator, store: AbstractStorageBackend
     ) {
-        this.generator = new Generator();
-        this.store = new Store();
+        this.generator = generator;
+        this.store = store;
     }
 
-    async generateAndStoreSourceMap(
-        source: string,
-        options?: StorageOptions // Use StorageOptions type for options parameter
-    ): Promise<boolean> {
+    async generateMap(): Promise<boolean> {
         try {
-            const map = await this.generator.generate(source);
-            if (options) {
-                await this.store.store(map, options);
-            } else {
-                throw new Error("Options must be provided for storing the source map.");
-            }
-            return true;
+            const map = await this.generator.generate()
+            this.map = map;
+            this.status = 'generated';
+            return Promise.resolve(true);
         } catch (error) {
-            console.error("Error in generateAndStoreSourceMap:", error);
-            throw error;
+            throw error; // Or handle differently
         }
     }
-
-    async getStoredSourceMap(options: StorageOptions): Promise<Record<string, string>> {
+    async fetchMap(): Promise<ModuleMap> {
         try {
-            return await this.store.read(options);
+            this.map = await this.store.fetch();
+            this.status = 'ready';
+            return this.map;
         } catch (error) {
             console.error("Error in getStoredSourceMap:", error);
             throw error; // Or handle differently
         }
     }
-    sourceMapResolve(moduleName: string): string {
-        if (!this.map) {
+    resolve(moduleName: string): string {
+        if (this.status !== 'ready' || !this.map) {
             throw new Error('Source map not found!');
         }
         const unkown = 'not found!'
-        return this.map[moduleName] || unkown;
+        return this.map[moduleName] as string || unkown;
     }
 }
 export {
     SourceMapManager,
-    SourceMapGenerator,
-    StorageBackend,
+    AbstractSourceMapGenerator as SourceMapGenerator,
+    AbstractStorageBackend as StorageBackend,
     StorageOptions,
     HTTPBackend,
     EnvVarBackend,

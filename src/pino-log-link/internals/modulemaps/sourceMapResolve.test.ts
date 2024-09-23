@@ -17,3 +17,4 @@ describe('findModulePath', () => {
         expect(sourceMapResolve('moduleC', pathMap)).toBe('not found!');
     });
 });
+

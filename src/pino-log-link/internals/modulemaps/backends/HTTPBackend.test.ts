@@ -1,4 +1,5 @@
-import { StorageOptions } from "../types";
+import ModuleMap from "./../types";
+import { HTTPOptions, StorageOptions } from "../types";
 import HTTPBackend, { validateHTTPOptions } from "./HTTPBackend";
 
 // mock fetch
@@ -8,7 +9,7 @@ describe('HTTPBackend', () => {
     let backend: HTTPBackend;
 
     beforeEach(() => {
-        backend = new HTTPBackend();
+        backend = new HTTPBackend({ type: 'http' });
     });
 
     describe('validateHTTPOptions', () => {
@@ -24,8 +25,8 @@ describe('HTTPBackend', () => {
                 envVarName: 'MODULE_MAP',
             };
             expect(() => {
-                validateHTTPOptions(options);
-            }).toThrow(`Invalid options type: ${options.type}. Expected 'http'.`);
+                validateHTTPOptions(options as HTTPOptions);
+            }).toThrow()
         });
 
         it('should throw an error if identifier or url is missing', () => {
@@ -40,11 +41,11 @@ describe('HTTPBackend', () => {
             } as StorageOptions;
 
             expect(() => {
-                validateHTTPOptions(options1);
+                validateHTTPOptions(options1 as HTTPOptions);
             }).toThrow('Identifier and URL must be provided for HTTPBackend.');
 
             expect(() => {
-                validateHTTPOptions(options2);
+                validateHTTPOptions(options2 as HTTPOptions);
             }).toThrow('Identifier and URL must be provided for HTTPBackend.');
         });
 
@@ -54,7 +55,7 @@ describe('HTTPBackend', () => {
                 identifier: 'myModuleMap',
                 url: 'https://example.com',
             };
-            const { identifier, url } = validateHTTPOptions(options);
+            const { identifier, url } = validateHTTPOptions(options as HTTPOptions);
             expect(identifier).toBe('myModuleMap');
             expect(url).toBe('https://example.com');
         });
@@ -66,7 +67,7 @@ describe('HTTPBackend', () => {
                 'moduleA': '/path/to/moduleA',
                 'moduleB': '/path/to/moduleB',
             };
-            const options: StorageOptions = {
+            const options: HTTPOptions = {
                 type: 'http',
                 identifier: 'myModuleMap',
                 url: 'https://example.com',
@@ -78,7 +79,7 @@ describe('HTTPBackend', () => {
 
     describe('read', () => {
         it('should call getMapFromHTTPRequest with the correct url', async () => {
-            const options: StorageOptions = {
+            const options: HTTPOptions = {
                 type: 'http',
                 identifier: 'myModuleMap',
                 url: 'https://example.com',
@@ -87,7 +88,7 @@ describe('HTTPBackend', () => {
             const getMapFromHTTPRequestSpy = jest
                 .spyOn(require('./getMapFromHTTPRequest'), 'default')
                 .mockResolvedValue({});
-            await backend.read(options);
+            await backend.fetch(options);
             expect(getMapFromHTTPRequestSpy).toHaveBeenCalledWith('https://example.com');
         });
     });

@@ -1,4 +1,5 @@
 import sourceMapResolve from './modulemaps/sourceMapResolve';
+import ModuleMap from './modulemaps/types';
 
 /**
  * Will find the moduleName in the moduleMap, and return the correspoding file path
@@ -7,7 +8,7 @@ import sourceMapResolve from './modulemaps/sourceMapResolve';
  * a path like '/project/src/moduleA.ts' will be mapped [url base]/project/src/moduleA.ts
  * The mapped url will be used inside the devtools to open the file in the editor.
  */
-function fromModuleToFileURL(moduleName: string, moduleMap: Record<string, string>, baseUrl: string): string {
+function fromModuleToFileURL(moduleName: string, moduleMap: ModuleMap, baseUrl: string): string {
     const modulePath = sourceMapResolve(moduleName, moduleMap);
     if (modulePath === 'not found!') {
         return modulePath;

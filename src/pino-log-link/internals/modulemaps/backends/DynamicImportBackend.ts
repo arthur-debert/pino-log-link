@@ -1,9 +1,10 @@
 import { SourceMapBackendReadError } from "../errors";
-import { StorageBackend } from "../types";
+import ModuleMap from "../types";
+import { AbstractStorageBackend } from "./AbstractStorageBackend";
 
-class DynamicImportBackend extends StorageBackend {
+class DynamicImportBackend extends AbstractStorageBackend {
     // ... implementation to use dynamic imports ...
-    async store(map: Record<string, string>): Promise<void> {
+    async store(map: ModuleMap): Promise<void> {
         try {
             // ... Implementation to store for dynamic import ...
         } catch (error) {
@@ -11,7 +12,7 @@ class DynamicImportBackend extends StorageBackend {
             throw error; // Or handle differently
         }
     }
-    async read(): Promise<Record<string, string>> {
+    async fetch(): Promise<ModuleMap> {
         try {
             // ... Implementation to read from dynamic import ...
             return await Promise.resolve({});

@@ -12,8 +12,8 @@ describe('FileSystemGenerator', () => {
     it('should call sourceMapGenFromFS with the correct arguments', async () => {
         const rootDir = '/path/to/root/dir';
         (generateMapFromFS as jest.Mock).mockReturnValue({});
-        const generator = new FileSystemGenerator();
-        await generator.generate(rootDir);
+        const generator = new FileSystemGenerator(rootDir);
+        await generator.generate();
         expect(generateMapFromFS).toHaveBeenCalledWith(rootDir, ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts']);
     });
 
@@ -21,8 +21,8 @@ describe('FileSystemGenerator', () => {
         const rootDir = '/path/to/root/dir';
         const expectedMap = { moduleA: '/path/to/moduleA' };
         (generateMapFromFS as jest.Mock).mockReturnValue(expectedMap);
-        const generator = new FileSystemGenerator();
-        const map = await generator.generate(rootDir);
+        const generator = new FileSystemGenerator(rootDir);
+        const map = await generator.generate();
         expect(map).toEqual(expectedMap);
     });
 
@@ -32,7 +32,15 @@ describe('FileSystemGenerator', () => {
         (generateMapFromFS as jest.Mock).mockImplementation(() => {
             throw new Error(errorMessage);
         });
-        const generator = new FileSystemGenerator();
-        await expect(generator.generate(rootDir)).rejects.toThrow(new SourceMapGenError('Error generating source map from file system'));
+        const generator = new FileSystemGenerator(rootDir);
+
+        // Suppress console.error output during this test
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        await expect(generator.generate()).rejects.toThrow(new SourceMapGenError('Error generating source map from file system'));
+
+        // Restore console.error functionality
+        consoleErrorSpy.mockRestore();
     });
+
 });

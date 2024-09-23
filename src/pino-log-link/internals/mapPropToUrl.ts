@@ -1,4 +1,5 @@
 import fromModuleToFileURL from "./fromModuleToFileURL";
+import ModuleMap from "./modulemaps/types";
 import removeTransformAppend from "./removeTransformAppend";
 
 /**
@@ -17,7 +18,7 @@ import removeTransformAppend from "./removeTransformAppend";
  * {  message: 'something happened http://localhost:3000/some/path/module.A' }.
  * Internally we're going to use the removeTransformAppend function and the fromModuleToFileURL function.
  */
-function mapPropToUrl(object: any, propName: string, baseURL: string, moduleMap: Record<string, string>, appendToProp: string) {
+function mapPropToUrl(object: any, propName: string, baseURL: string, moduleMap: ModuleMap, appendToProp: string) {
     return removeTransformAppend(object, propName, (moduleName: string) => fromModuleToFileURL(moduleName, moduleMap, baseURL), appendToProp);
 }
 
