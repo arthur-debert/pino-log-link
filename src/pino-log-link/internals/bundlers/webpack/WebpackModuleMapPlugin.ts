@@ -21,7 +21,7 @@ module.exports = {
  */
 import * as path from 'path';
 import { Compiler, WebpackPluginInstance } from 'webpack';
-import sourceMapGenFromFS from '../../modue-maps/sourceMapGenFromFS';
+import sourceMapGenFromFS from '../../modulemaps/generators/generateMapFromFS';
 
 
 interface ModuleMapPluginOptions {

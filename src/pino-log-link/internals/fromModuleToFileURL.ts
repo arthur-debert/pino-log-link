@@ -1,4 +1,4 @@
-import sourceMapResolve from './modue-maps/sourceMapResolve';
+import sourceMapResolve from './modulemaps/sourceMapResolve';
 
 /**
  * Will find the moduleName in the moduleMap, and return the correspoding file path

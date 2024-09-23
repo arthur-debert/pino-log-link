@@ -1,5 +1,5 @@
 import { Volume } from 'memfs';
-import sourceMapGenFromFS from './sourceMapGenFromFS';
+import sourceMapGenFromFS from './generateMapFromFS';
 
 let vol: any;
 
