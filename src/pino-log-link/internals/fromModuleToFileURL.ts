@@ -1,4 +1,5 @@
-import findModulePath from "./findModulePath";
+import findModulePath from './modue-maps/findModulePath';
+
 /**
  * Will find the moduleName in the moduleMap, and return the correspoding file path
  * as a file URL. If the module is not found, it will return 'not found!'.

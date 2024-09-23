@@ -21,7 +21,7 @@ module.exports = {
  */
 import * as path from 'path';
 import { Compiler, WebpackPluginInstance } from 'webpack';
-import generateModuleMap from '../../generateModuleMap';
+import generateModuleMap from '../../modue-maps/generateModuleMap';
 
 
 interface ModuleMapPluginOptions {
