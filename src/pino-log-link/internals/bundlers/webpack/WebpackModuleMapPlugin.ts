@@ -21,7 +21,7 @@ module.exports = {
  */
 import * as path from 'path';
 import { Compiler, WebpackPluginInstance } from 'webpack';
-import generateModuleMap from '../../modue-maps/generateModuleMap';
+import sourceMapGenFromFS from '../../modue-maps/sourceMapGenFromFS';
 
 
 interface ModuleMapPluginOptions {
@@ -54,7 +54,7 @@ class WebPackModuleMapPlugin implements WebpackPluginInstance {
         compiler.hooks.emit.tapAsync(
             'ModuleMapPlugin',
             (compilation: { assets: { [x: string]: { source: () => string; size: () => number; }; }; }, callback: () => void) => {
-                const moduleMap = generateModuleMap(
+                const moduleMap = sourceMapGenFromFS(
                     this.rootDirectory,
                     this.includeExtensions
                 );

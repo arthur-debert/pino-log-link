@@ -1,5 +1,5 @@
 import { Volume } from 'memfs';
-import generateModuleMap from './generateModuleMap';
+import sourceMapGenFromFS from './sourceMapGenFromFS';
 
 let vol: any;
 
@@ -19,7 +19,7 @@ describe('generateModuleMap', () => {
             '/project/src/moduleB.js': '// moduleB.js content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'moduleA': '/project/src/moduleA.ts',
@@ -34,7 +34,7 @@ describe('generateModuleMap', () => {
             '/project/src/moduleY.js': '// moduleY.js content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'featureA/moduleX': '/project/src/featureA/moduleX.ts',
@@ -49,7 +49,7 @@ describe('generateModuleMap', () => {
             '/project/src/featureB/utils/moduleZ.ts': '// featureB/utils/moduleZ.ts content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'featureA/component/moduleZ': '/project/src/featureA/component/moduleZ.ts',
@@ -75,7 +75,7 @@ describe('generateModuleMap', () => {
             '/project/src/moduleB.js': '// moduleB.js content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'moduleA': '/project/src/moduleA.ts',
@@ -90,7 +90,7 @@ describe('generateModuleMap', () => {
             '/project/src/moduleY.js': '// moduleY.js content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'featureA/moduleX': '/project/src/featureA/moduleX.ts',
@@ -105,7 +105,7 @@ describe('generateModuleMap', () => {
             '/project/src/featureB/utils/moduleZ.ts': '// featureB/utils/moduleZ.ts content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'featureA/component/moduleZ': '/project/src/featureA/component/moduleZ.ts',
@@ -119,7 +119,7 @@ describe('generateModuleMap', () => {
             '/project/src2/moduleA.ts': '// moduleA.ts content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             'moduleA': '/project/src/moduleA.ts',
@@ -133,7 +133,7 @@ describe('generateModuleMap', () => {
             '/project/src/moduleA.js': '// moduleA.js content',
         });
 
-        const moduleMap = generateModuleMap('/project/src', ['.ts', '.js'], vol);
+        const moduleMap = sourceMapGenFromFS('/project/src', ['.ts', '.js'], vol);
 
         expect(moduleMap).toEqual({
             "ts": "/project/src/moduleA.js",

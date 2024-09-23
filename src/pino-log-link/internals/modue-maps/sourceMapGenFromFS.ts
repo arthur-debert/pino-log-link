@@ -10,7 +10,7 @@ const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'
  * If more than one file has the same module name (say packageA.index.ts and packageB.indexTs),
  * find the smallest path that removes ambguitity, and store that path part as the key to the map
  */
-function generateModuleMap(rootDirectory: string, includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS, fs?: any): Record<string, string> {
+function sourceMapGenFromFS(rootDirectory: string, includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS, fs?: any): Record<string, string> {
     const moduleMap: Record<string, string> = {};
     const moduleNameToFilePath: Record<string, string[]> = {};
 
@@ -77,5 +77,5 @@ function findLongestCommonPrefix(strs: string[]): string {
     return prefix;
 }
 
-export default generateModuleMap;
+export default sourceMapGenFromFS;
 

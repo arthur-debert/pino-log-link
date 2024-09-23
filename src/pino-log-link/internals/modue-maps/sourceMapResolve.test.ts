@@ -1,4 +1,4 @@
-import findModulePath from './findModulePath';
+import sourceMapResolve from './sourceMapResolve';
 
 describe('findModulePath', () => {
     it('should return the correct path for a known module', () => {
@@ -6,7 +6,7 @@ describe('findModulePath', () => {
             'moduleA': '/path/to/moduleA',
             'moduleB': '/path/to/moduleB',
         };
-        expect(findModulePath('moduleA', pathMap)).toBe('/path/to/moduleA');
+        expect(sourceMapResolve('moduleA', pathMap)).toBe('/path/to/moduleA');
     });
 
     it('should return "not found!" for an unknown module', () => {
@@ -14,6 +14,6 @@ describe('findModulePath', () => {
             'moduleA': '/path/to/moduleA',
             'moduleB': '/path/to/moduleB',
         };
-        expect(findModulePath('moduleC', pathMap)).toBe('not found!');
+        expect(sourceMapResolve('moduleC', pathMap)).toBe('not found!');
     });
 });

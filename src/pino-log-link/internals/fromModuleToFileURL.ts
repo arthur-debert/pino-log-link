@@ -1,4 +1,4 @@
-import findModulePath from './modue-maps/findModulePath';
+import sourceMapResolve from './modue-maps/sourceMapResolve';
 
 /**
  * Will find the moduleName in the moduleMap, and return the correspoding file path
@@ -8,7 +8,7 @@ import findModulePath from './modue-maps/findModulePath';
  * The mapped url will be used inside the devtools to open the file in the editor.
  */
 function fromModuleToFileURL(moduleName: string, moduleMap: Record<string, string>, baseUrl: string): string {
-    const modulePath = findModulePath(moduleName, moduleMap);
+    const modulePath = sourceMapResolve(moduleName, moduleMap);
     if (modulePath === 'not found!') {
         return modulePath;
     }
