@@ -1,4 +1,4 @@
-import { SourceMapBackendStoreError, SourceMapBackendReadError } from "../errors/errors";
+import { SourceMapBackendStoreError, SourceMapBackendReadError } from "../errors";
 import { StorageBackend } from "../types";
 import getMapFromEnv from "./getMapFromEnv";
 import storeMapInEnv from "./storeMapInEnv";

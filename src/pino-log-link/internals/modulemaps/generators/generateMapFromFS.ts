@@ -1,4 +1,6 @@
 import * as path from 'path';
+import fs from 'fs';
+
 
 const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts'];
 
@@ -10,19 +12,18 @@ const DEFAULT_INCLUDE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'
  * If more than one file has the same module name (say packageA.index.ts and packageB.indexTs),
  * find the smallest path that removes ambguitity, and store that path part as the key to the map
  */
-function generateMapFromFS(rootDirectory: string, includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS, fs?: any): Record<string, string> {
+function generateMapFromFS(rootDirectory: string,
+    includeExtensions: string[] = DEFAULT_INCLUDE_EXTENSIONS,
+    fsProvider: any = fs): Record<string, string> {
     const moduleMap: Record<string, string> = {};
     const moduleNameToFilePath: Record<string, string[]> = {};
 
     function traverseDirectory(directory: string) {
-        if (!fs) {
-            fs = require('fs');
-        }
-        const files = fs.readdirSync(directory);
+        const files = fsProvider.readdirSync(directory);
 
         for (const file of files) {
             const filePath = path.join(directory, file);
-            const fileStat = fs.statSync(filePath);
+            const fileStat = fsProvider.statSync(filePath);
 
             if (fileStat.isDirectory()) {
                 traverseDirectory(filePath);
@@ -43,16 +44,7 @@ function generateMapFromFS(rootDirectory: string, includeExtensions: string[] = 
             const commonPrefix = findLongestCommonPrefix(filePaths);
             // Prioritize .ts files when resolving conflicts
             let moduleKey = '';
-            for (const filePath of filePaths) {
-                if (filePath.endsWith('.ts')) {
-                    moduleKey = filePath.substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
-                    break; // Prioritize the first .ts file found
-                }
-            }
-            // If no .ts file is found, use the original logic
-            if (moduleKey === '') {
-                moduleKey = filePaths[0].substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
-            }
+            moduleKey = getModuleKey(filePaths, moduleKey, commonPrefix);
             moduleMap[moduleKey] = filePaths[0];
         }
     }
@@ -61,7 +53,21 @@ function generateMapFromFS(rootDirectory: string, includeExtensions: string[] = 
     return moduleMap;
 }
 
-function findLongestCommonPrefix(strs: string[]): string {
+export function getModuleKey(filePaths: string[], moduleKey: string, commonPrefix: string) {
+    for (const filePath of filePaths) {
+        if (filePath.endsWith('.ts')) {
+            moduleKey = filePath.substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
+            break; // Prioritize the first .ts file found
+        }
+    }
+    // If no .ts file is found, use the original logic
+    if (moduleKey === '') {
+        moduleKey = filePaths[0].substring(commonPrefix.length).replace(/\//g, '/').replace(/\.[^/.]+$/, '');
+    }
+    return moduleKey;
+}
+
+export function findLongestCommonPrefix(strs: string[]): string {
     if (strs.length === 0) {
         return "";
     }

@@ -1,43 +1,34 @@
 import fetch from "node-fetch";
-import { SourceMapBackendReadError } from "../errors/errors";
-import { StorageBackend } from "../types";
+import { SourceMapBackendReadError } from "../errors";
+import { StorageBackend, StorageOptions } from "../types";
+import getMapFromHTTPRequest from "./getMapFromHTTPRequest";
 
-class HTTPBackend extends StorageBackend {
+export function validateHTTPOptions(options?: StorageOptions): { identifier: string; url: string } {
+    if (!options) {
+        throw new Error("Options must be provided for HTTPBackend.");
+    }
+    if (options.type !== 'http') {
+        throw new Error(`Invalid options type: ${options.type}. Expected 'http'.`);
+    }
+    const identifier = options.identifier;
+    const url = options.url;
+    if (!identifier || !url) {
+        throw new Error("Identifier and URL must be provided for HTTPBackend.");
+    }
+    return { identifier, url };
+}
+
+export default class HTTPBackend extends StorageBackend {
     private urls: Record<string, string> = {};
 
-    async store(map: Record<string, string>, options?: Record<string, any>): Promise<void> {
-        const identifier = options?.identifier;
-        const url = options?.url;
-        if (!identifier || !url) {
-            throw new Error("Identifier and URL must be provided for HTTPBackend.store().");
-        }
-        if (this.urls[identifier]) {
-            throw new Error(`A source map with identifier '${identifier}' already exists.`);
-        }
-        try {
-            // ... Implementation to store via HTTP using the provided url ...
-            this.urls[identifier] = url;
-        } catch (error) {
-            console.error(`Error storing source map with identifier '${identifier}' to ${url}:`, error);
-            throw error;
-        }
+    async store(map: Record<string, string>, options?: StorageOptions): Promise<void> {
+        const { identifier, url } = validateHTTPOptions(options);
+        this.urls[identifier] = url;
     }
 
-    async read(options?: Record<string, any>): Promise<Record<string, string>> {
-        const identifier = options?.identifier;
-        if (!identifier) {
-            throw new Error("Identifier must be provided for HTTPBackend.read().");
-        }
+    async read(options?: StorageOptions): Promise<Record<string, string>> {
+        const { identifier } = validateHTTPOptions(options);
         const url = this.urls[identifier];
-        if (!url) {
-            throw new Error(`No URL found for source map identifier '${identifier}'.`);
-        }
-        try {
-            const result = await fetch(url).then((response) => response.json()) as Record<string, string>;
-            return result;
-        } catch (error) {
-            console.error(`Error reading source map with identifier '${identifier}' from ${url}:`, error);
-            throw new SourceMapBackendReadError(`Error reading source map from ${url}`);
-        }
+        return Promise.resolve(getMapFromHTTPRequest(url))
     }
 }

@@ -1,4 +1,4 @@
-import { SourceMapBackendReadError } from "../errors/errors";
+import { SourceMapBackendReadError } from "../errors";
 import { StorageBackend } from "../types";
 
 class DynamicImportBackend extends StorageBackend {

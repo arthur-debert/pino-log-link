@@ -1,7 +1,7 @@
 import fs from "fs";
 import ModuleMap, { SourceMapGenerator } from "../types";
 import generateMapFromSourceMaps from "./generateMapFromSourceMaps";
-import { SourceMapGenError } from "../errors/errors";
+import { SourceMapGenError } from "../errors";
 
 export default class SourceMapMapGenerator extends SourceMapGenerator {
     async generate(mapPath: string, fsProvider: any = fs): Promise<ModuleMap> {

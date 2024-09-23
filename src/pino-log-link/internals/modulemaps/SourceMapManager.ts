@@ -26,13 +26,13 @@ const manager = new SourceMapManager(new FileSystemGenerator(), new EnvVarBacken
     }
 })();
  */
-import * as fs from 'fs';
-import * as path from 'path';
 // and the main logic for generating . storing and fecthing
-import sourceMapGenFromFS from './generators/generateMapFromFS';
 import ModuleMap, { SourceMapGenerator, StorageBackend, StorageOptions } from './types';
-import generateMapFromSourceMaps from './generators/generateMapFromSourceMaps';
-import { SourceMapGenError } from './errors/errors';
+import HTTPBackend from './backends/HTTPBackend';
+import EnvVarBackend from './backends/EnvVarBackend';
+import FileSystemGenerator from './generators/FileSystemMapGenerator';
+import SourceMapMapGenerator from './generators/SourceMapGenerator';
+import { SourceMapGenError, SourceMapBackendReadError, SourceMapBackendStoreError, InvalidModuleMapError, InvalidModuleMapSerializationError, HttpError, NetworkError } from './errors';
 
 
 // Define specific types for type safety
@@ -92,3 +92,21 @@ class SourceMapManager {
         return this.map[moduleName] || unkown;
     }
 }
+export {
+    SourceMapManager,
+    SourceMapGenerator,
+    StorageBackend,
+    StorageOptions,
+    HTTPBackend,
+    EnvVarBackend,
+    FileSystemGenerator,
+    SourceMapMapGenerator,
+    // Errors
+    SourceMapGenError,
+    SourceMapBackendReadError,
+    SourceMapBackendStoreError,
+    InvalidModuleMapError,
+    InvalidModuleMapSerializationError,
+    HttpError,
+    NetworkError
+};

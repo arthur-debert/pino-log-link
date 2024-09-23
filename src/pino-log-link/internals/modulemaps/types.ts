@@ -24,6 +24,7 @@ interface EnvVarOptions {
     envVarName: string;
 }
 interface HTTPOptions {
+    identifier: any;
     type: 'http';
     url: string;
 }

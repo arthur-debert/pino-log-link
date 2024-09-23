@@ -1,4 +1,4 @@
-import { SourceMapBackendReadError, SourceMapBackendStoreError } from '../errors/errors';
+import { SourceMapBackendReadError, SourceMapBackendStoreError } from '../errors';
 import EnvVarBackend from './EnvVarBackend';
 import getMapFromEnv from './getMapFromEnv';
 import storeMapInEnv from './storeMapInEnv';

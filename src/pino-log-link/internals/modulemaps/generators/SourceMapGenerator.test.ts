@@ -1,5 +1,5 @@
 import SourceMapMapGenerator from './SourceMapGenerator';
-import { SourceMapGenError } from "../errors/errors";
+import { SourceMapGenError } from "../errors";
 import fs from 'fs';
 
 import ModuleMap from '../types';
@@ -20,17 +20,17 @@ describe('SourceMapFileGenerator', () => {
         expect(generateMapFromSourceMaps).toHaveBeenCalledWith(mapPath, fs);
     });
 
-   it('should return a Promise that resolves with the result of generateMapFromSourceMaps', async () => {
-       const mapPath = '/path/to/source/map.txt';
-       const expectedMap: ModuleMap = { moduleA: '/path/to/moduleA' };
-       (generateMapFromSourceMaps as jest.Mock).mockResolvedValue(expectedMap);
+    it('should return a Promise that resolves with the result of generateMapFromSourceMaps', async () => {
+        const mapPath = '/path/to/source/map.txt';
+        const expectedMap: ModuleMap = { moduleA: '/path/to/moduleA' };
+        (generateMapFromSourceMaps as jest.Mock).mockResolvedValue(expectedMap);
 
-       // Await the promise here
-       const map = await new SourceMapMapGenerator().generate(mapPath);
+        // Await the promise here
+        const map = await new SourceMapMapGenerator().generate(mapPath);
 
-       expect(map).toEqual(expectedMap);
-   });
-   
+        expect(map).toEqual(expectedMap);
+    });
+
 
     it('should throw a SourceMapGenError if generateMapFromSourceMaps throws an error', async () => {
         const mapPath = '/path/to/source/map.txt';

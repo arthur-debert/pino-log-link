@@ -1,4 +1,4 @@
-import { SourceMapGenError } from '../errors/errors';
+import { SourceMapGenError } from '../errors';
 import FileSystemGenerator from './FileSystemMapGenerator';
 import generateMapFromFS from './generateMapFromFS';
 
