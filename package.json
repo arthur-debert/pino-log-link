@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "docs": "typedoc",
-    "tests": "jest src",
+    "test": "jest src",
     "start:node": "tsc && node dist/index.mjs",
     "build:production": "node buildProduction.mjs"
   },
